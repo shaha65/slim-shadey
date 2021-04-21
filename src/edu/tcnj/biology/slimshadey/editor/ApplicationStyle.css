@@ -1,0 +1,57 @@
+.biochar {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.biochar_basicShade_black {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.biochar_basicShade_grey {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+    -fx-background-color: darkgrey;
+    -fx-text-fill: white;
+}
+
+.biochar_basicShade_white {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.biochar_label {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+}
+
+.biochar_label_hover0 {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+    -fx-background-color: lightblue;
+}
+
+.biochar_label_hover1 {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+    -fx-background-color: #f6b447;
+}
+
+.biochar_label_hover2 {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+    -fx-background-color: #ea9020;
+}
+
+.biochar_label_hover3 {
+    -fx-font-family: "unifont";
+    -fx-font-size: 18;
+    -fx-background-color: #6ffd71;
+    -fx-underline: true;
+}

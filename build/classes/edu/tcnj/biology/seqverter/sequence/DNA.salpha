@@ -1,0 +1,4 @@
+slim_alpha
+$Name={DNA}
+$Alphabet={(A,Adenosine,#A0A0FF),(T,Thymidine,#A0FFA0),(G,Guanosine,#FF7070),(C,Cytosine,#FF8C4B),(N,ANY,#FFFFFF),(-,gap,#FFFFFF)}
+$Categories={(Purine,AG),(Pyrimidine,TC),(ANY,N)}
