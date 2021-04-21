@@ -1,0 +1,18 @@
+Nucleic
+A Adenine
+C Cytosine
+G Guanine
+T Thymine
+U Uracil
+R *AG
+Y *CTU
+K *GTU
+M *AC
+S *CG
+W *AT
+B *CGTU
+D *AGTU
+H *ACTU
+V *ACG
+N *ACGTU
+- Gap

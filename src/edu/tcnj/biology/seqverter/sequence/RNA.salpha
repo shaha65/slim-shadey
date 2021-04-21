@@ -1,0 +1,4 @@
+slim_alpha
+$Name={RNA}
+$Alphabet={(A,Adenosine,#A0A0FF),(U,Uridine,#B8B8B8),(G,Guanosine,#FF7070),(C,Cytosine,#FF8C4B),(N,ANY,#FFFFFF),(-,gap,#FFFFFF)}
+$Categories={(Purine,AG),(Pyrimidine,UC),(ANY,N)}
