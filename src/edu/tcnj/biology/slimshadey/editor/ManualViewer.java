@@ -104,7 +104,7 @@ public class ManualViewer {
                             }
                         }
                         outimg.close();
-                    }
+                   } 
                 }
             }
             //htmlstr = baos.toString(StandardCharsets.UTF_8.name());
