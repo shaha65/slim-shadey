@@ -95,7 +95,7 @@ public class ManualViewer {
                     tempimg.deleteOnExit();
                     if (tempimg.createNewFile()) {
                         OutputStream outimg = new FileOutputStream(tempimg);
-                        try (InputStream is = ManualViewer.class.getResourceAsStream("images\\" + rscpath)) {
+                        try (InputStream is = getClass().getClassLoader().getResourceAsStream("resources/images/" + rscpath)) {
                             byte[] buffer = new byte[1024];
                             int length;
                             while ((length = is.read(buffer)) != -1) {
