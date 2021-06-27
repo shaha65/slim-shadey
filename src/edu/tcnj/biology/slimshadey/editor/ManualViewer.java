@@ -79,9 +79,12 @@ public class ManualViewer {
 
             File tmpimgdir_orig = imgDir.toFile();
             tmpimgdir_orig.deleteOnExit();
-            File tmpimgdir = new File(imgDir.toString().substring(0, imgDir.toString().lastIndexOf("\\")) + "\\" + IMG_STR);
+            //File tmpimgdir = new File(imgDir.toString().substring(0, imgDir.toString().lastIndexOf("\\")) + "\\" + IMG_STR);
+            //System.out.println(imgDir.toString().substring(0, imgDir.toString().lastIndexOf("\\")) + "\\" + IMG_STR);
+            File tmpimgdir = new File(imgDir.toString().substring(0, imgDir.toString().lastIndexOf(IMG_STR) + IMG_STR.length()));
             tmpimgdir.deleteOnExit();
-            System.out.println(imgDir.toString().substring(0, imgDir.toString().lastIndexOf("\\")) + "\\" + IMG_STR);
+
+            System.out.println("*****" + imgDir.toString().substring(0, imgDir.toString().lastIndexOf(IMG_STR) + IMG_STR.length()));
 
             boolean rename = tmpimgdir_orig.renameTo(tmpimgdir);
             System.out.println(rename);
@@ -104,7 +107,7 @@ public class ManualViewer {
                             }
                         }
                         outimg.close();
-                   } 
+                    }
                 }
             }
             //htmlstr = baos.toString(StandardCharsets.UTF_8.name());
