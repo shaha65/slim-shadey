@@ -50,6 +50,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -57,6 +58,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -138,6 +140,7 @@ public class EditorTab extends Tab {
 
         this.setContent(root);
         OUTPUT_PRINTER = new OutputPrinter(this);
+        this.setPaneSplit();
     }
 
     public EditorTab(VBox annotationLabelsTemp,
@@ -165,6 +168,7 @@ public class EditorTab extends Tab {
 
         this.setContent(root);
         OUTPUT_PRINTER = new OutputPrinter(this);
+        this.setPaneSplit();
     }
 
     public EditorTab(VBox annotationLabelsTemp,
@@ -203,6 +207,26 @@ public class EditorTab extends Tab {
 
         vmsa.setLiveHover(trackLiveHover);
         vmsa.setRefreshDelay(refreshDelay);
+        this.setPaneSplit();
+    }
+
+    private void setPaneSplit() {
+        Platform.runLater(() -> {
+            double conformWidth = 0;
+            for (Node nx : this.vmsa.getNames().getChildren()) {
+                if (nx instanceof VBox) {
+                    for (Node ny : ((VBox) nx).getChildren()) {
+                        if (ny instanceof Label) {
+                            conformWidth = Math.max(conformWidth, ((Label) ny).getWidth());
+                            System.out.println(((Label) ny).getText() + " " + ((Label) ny).getWidth());
+                        }
+                    }
+                }
+            }
+            conformWidth += 30; //px
+            System.out.println("Initializing pane proportion; " + conformWidth + "/" + mainPane.getWidth());
+            mainPane.setDividerPosition(0, conformWidth / mainPane.getWidth());
+        });
     }
 
     protected VBCEditor vbcEditor() {

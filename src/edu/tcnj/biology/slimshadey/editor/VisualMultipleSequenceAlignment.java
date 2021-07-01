@@ -335,10 +335,9 @@ public class VisualMultipleSequenceAlignment {
         //collapseIdenticalSequences(autoCollapse[0]);
         this.autoCollapse = autoCollapse[0];
     }
-    
+
     public boolean autoCollapse = false;
-    
-    
+
     //save identical sequence groups for de-collapsing sequences
     private List<List<List<Object>>> identicalSequenceGroups;
     private boolean isCollapsed = false;
@@ -1755,6 +1754,10 @@ public class VisualMultipleSequenceAlignment {
         annotateStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("resources/icons/icon3.png")));
         annotateStage.setTitle("Add annotations");
 
+        RadioButton fillWhitespaceLeft = new RadioButton("Add spaces to beginning");
+        RadioButton fillWhitespaceRight = new RadioButton("Add spaces to end");
+        RadioButton repeatPattern = new RadioButton("Repeat pattern");
+
         Button executeAnnotate = new Button("Annotate");
 
         VBox annotateCommands = new VBox(5);
@@ -1772,7 +1775,6 @@ public class VisualMultipleSequenceAlignment {
             for (int i = start; i <= end; i++) {
                 sb.append(getAnnoVBC(k, i).getChar());
             }
-
             existingAnnotation = sb.toString();
             if (existingAnnotation.trim().isEmpty()) {
                 existingAnnotation = "";
@@ -1802,7 +1804,8 @@ public class VisualMultipleSequenceAlignment {
                 public Object call() throws Exception {
                     Platform.runLater(() -> {
                         //System.err.println(pattern);
-                        annotate(index, start, end, annotation.getText());
+                        int procedure = fillWhitespaceLeft.isSelected() ? 0 : (fillWhitespaceRight.isSelected() ? 1 : 2);
+                        annotate(index, start, end, procedure, annotation.getText());
                     });
                     return null;
                 }
@@ -1836,10 +1839,18 @@ public class VisualMultipleSequenceAlignment {
         VBox annotateRoot = new VBox(8);
         annotateRoot.setPadding(new Insets(10));
         //annotateRoot.setAlignment(Pos.CENTER);
+
+        HBox fillProcedureBox = new HBox(10);
+
+        fillProcedureBox.getChildren().addAll(fillWhitespaceLeft, fillWhitespaceRight, repeatPattern);
+        ToggleGroup tgtemp = new ToggleGroup();
+        tgtemp.getToggles().addAll(fillWhitespaceLeft, fillWhitespaceRight, repeatPattern);
+        fillWhitespaceRight.setSelected(true);
+
         HBox executeAnnotateBox = new HBox();
         executeAnnotateBox.getChildren().add(executeAnnotate);
         executeAnnotateBox.setAlignment(Pos.CENTER);
-        annotateRoot.getChildren().addAll(annotateCommands, commonChars, executeAnnotateBox);
+        annotateRoot.getChildren().addAll(annotateCommands, commonChars, fillProcedureBox, executeAnnotateBox);
         Scene annotateScene = new Scene(annotateRoot);
         annotateStage.setScene(annotateScene);
         annotateStage.initModality(Modality.APPLICATION_MODAL);
@@ -2002,9 +2013,46 @@ public class VisualMultipleSequenceAlignment {
         annotateCommandsPane.fitToWidthProperty().set(true);
     }
 
-    private void annotate(int index, int start, int end, String pattern) {
-        int patternIter = 0;
+    private void annotate(int index, int start, int end, int procedure, String pattern) {
+        /*
+        for param - int procedure
+         0 --> fill whitespace from left (right aligned)
+         1 --> fill whitespace from right (left aligned)
+         2 --> repeat pattern
+         */
+        int selectionSize = Math.abs(end - start) + 1;
         boolean empty = pattern.trim().isEmpty();
+
+        List<String> patternDecomp = new ArrayList<>();
+        for (int k = 0; k < pattern.length(); k++) {
+            patternDecomp.add(String.valueOf(pattern.charAt(k)));
+        }
+
+        List<String> instructions = new ArrayList<>();
+        if (procedure == 2) {
+            for (int k = 0; k < selectionSize; k++) {
+                instructions.add(empty ? " " : patternDecomp.get(k % patternDecomp.size()));
+            }
+        } else if (procedure == 0 || procedure == 1) {
+            if (procedure == 0) {
+                Collections.reverse(patternDecomp);
+            }
+            for (int k = 0; k < selectionSize; k++) {
+                instructions.add(k - patternDecomp.size() >= 0 ? " " : patternDecomp.get(k));
+            }
+            if (procedure == 0) {
+                Collections.reverse(instructions);
+            }
+        }
+        
+        System.out.println("Annotating " + String.valueOf(index) + ".... (Procedure #" + String.valueOf(procedure) + ")");
+        for (int k = start; k <= end; k++) {
+            System.out.println(instructions.get(0) + "*" + String.valueOf(k));
+            getAnnoVBC(index, k).setText(instructions.remove(0));
+        }
+
+        /*
+        int patternIter = 0;
         for (int k = start; k <= end; k++) {
             //System.err.println(pattern.charAt(patternIter));
             String toUse = " ";
@@ -2017,6 +2065,7 @@ public class VisualMultipleSequenceAlignment {
                 patternIter = 0;
             }
         }
+         */
     }
 
     private void editseq(int index, int start, int end, String pattern, boolean endSpaceAsGap) {
