@@ -223,6 +223,7 @@ public class EditorTab extends Tab {
                     }
                 }
             }
+            
             conformWidth += 30; //px
             System.out.println("Initializing pane proportion; " + conformWidth + "/" + mainPane.getWidth());
             mainPane.setDividerPosition(0, conformWidth / mainPane.getWidth());
