@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -140,7 +141,7 @@ public class EditorTab extends Tab {
 
         this.setContent(root);
         OUTPUT_PRINTER = new OutputPrinter(this);
-        this.setPaneSplit();
+        this.setPaneSplit(0, null);
     }
 
     public EditorTab(VBox annotationLabelsTemp,
@@ -168,7 +169,7 @@ public class EditorTab extends Tab {
 
         this.setContent(root);
         OUTPUT_PRINTER = new OutputPrinter(this);
-        this.setPaneSplit();
+        this.setPaneSplit(0, "this tab is an exported selection");
     }
 
     public EditorTab(VBox annotationLabelsTemp,
@@ -207,27 +208,48 @@ public class EditorTab extends Tab {
 
         vmsa.setLiveHover(trackLiveHover);
         vmsa.setRefreshDelay(refreshDelay);
-        this.setPaneSplit();
+
+        setPaneSplit(500, "Run with Runnable() and Thread()");
+
     }
 
-    private void setPaneSplit() {
-        Platform.runLater(() -> {
-            double conformWidth = 0;
-            for (Node nx : this.vmsa.getNames().getChildren()) {
-                if (nx instanceof VBox) {
-                    for (Node ny : ((VBox) nx).getChildren()) {
-                        if (ny instanceof Label) {
-                            conformWidth = Math.max(conformWidth, ((Label) ny).getWidth());
-                            System.out.println(((Label) ny).getText() + " " + ((Label) ny).getWidth());
+    private void setPaneSplit(long delay, String message) {
+        Runnable splitterOp = () -> {
+            if (delay > 0) {
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(EditorTab.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            Platform.runLater(() -> {
+                if (message != null && !message.trim().isEmpty()) {
+                    System.out.println("Pane splitting message: " + message + " (delay=" + delay + "ms)");
+                } else {
+                    System.out.println("Commencing automated pane splitting.... (delay=" + delay + "ms)");
+                }
+                double conformWidth = 0;
+                for (Node nx : this.vmsa.getNames().getChildren()) {
+                    if (nx instanceof VBox) {
+                        for (Node ny : ((VBox) nx).getChildren()) {
+                            if (ny instanceof Label) {
+                                conformWidth = Math.max(conformWidth, ((Label) ny).getWidth());
+                                System.out.println(((Label) ny).getText() + " " + ((Label) ny).getLayoutBounds().getWidth());
+                            }
                         }
                     }
                 }
-            }
-            
-            conformWidth += 30; //px
-            System.out.println("Initializing pane proportion; " + conformWidth + "/" + mainPane.getWidth());
-            mainPane.setDividerPosition(0, mainPane.getWidth() == 0.0d ? 0.3 : conformWidth / mainPane.getWidth());
-        });
+                conformWidth += 30; //px
+                System.out.println("Initializing pane proportion; " + conformWidth + "/" + mainPane.getWidth());
+                mainPane.setDividerPosition(0, mainPane.getWidth() == 0.0d ? 0.3 : conformWidth / mainPane.getWidth());
+            });
+
+        };
+        try {
+            (new Thread(splitterOp)).start();
+        } catch (Exception ex) {
+            Logger.getLogger(EditorTab.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     protected VBCEditor vbcEditor() {
@@ -443,7 +465,7 @@ public class EditorTab extends Tab {
         mainPane.getRightPane().setContent(main_spacer);
 
         //anchorName.getChildren().addAll(this.seqNames);
-        mainPane.setDividerPosition(0, 0.3);
+        mainPane.setDividerPosition(0, 0.2);
 
         root.widthProperty().addListener(e -> {
 
