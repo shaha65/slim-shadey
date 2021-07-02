@@ -209,12 +209,17 @@ public class EditorTab extends Tab {
         vmsa.setLiveHover(trackLiveHover);
         vmsa.setRefreshDelay(refreshDelay);
 
-        setPaneSplit(500, "Run with Runnable() and Thread()");
+        setPaneSplit(0, "Run with Runnable() and Thread()");
 
     }
 
+    private double detectedWidth = 0.0d;
+    private boolean detected = false;
+
     private void setPaneSplit(long delay, String message) {
+        detected = false;
         Runnable splitterOp = () -> {
+            // setting a fixed delay is no longer necessary
             if (delay > 0) {
                 try {
                     Thread.sleep(delay);
@@ -222,29 +227,52 @@ public class EditorTab extends Tab {
                     Logger.getLogger(EditorTab.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            Platform.runLater(() -> {
-                if (message != null && !message.trim().isEmpty()) {
-                    System.out.println("Pane splitting message: " + message + " (delay=" + delay + "ms)");
-                } else {
-                    System.out.println("Commencing automated pane splitting.... (delay=" + delay + "ms)");
+            // end fixed delay;
+            int waitCount = 0;
+            detectedWidth = 0.0d;
+            // will wait for a maximum of 5 seconds to detect the Scene components
+            while (detectedWidth == 0.0d && waitCount < 100) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(EditorTab.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                double conformWidth = 0;
-                for (Node nx : this.vmsa.getNames().getChildren()) {
-                    if (nx instanceof VBox) {
-                        for (Node ny : ((VBox) nx).getChildren()) {
-                            if (ny instanceof Label) {
-                                conformWidth = Math.max(conformWidth, ((Label) ny).getWidth());
-                                System.out.println(((Label) ny).getText() + " " + ((Label) ny).getLayoutBounds().getWidth());
+                if (mainPane.getWidth() != 0.0d) {
+                    detectedWidth = mainPane.getWidth();
+                }
+
+                System.out.println(detectedWidth + " | " + (50 * waitCount) + "ms elapsed");
+                waitCount++;
+            }
+            if (detectedWidth != 0.0d) {
+                System.out.println("*Waited " + (waitCount * 50) + "ms to detect SplitPane");
+                Platform.runLater(() -> {
+                    if (message != null && !message.trim().isEmpty()) {
+                        System.out.println("Pane splitting message: " + message + " (delay=" + delay + "ms)");
+                    } else {
+                        System.out.println("Commencing automated pane splitting.... (delay=" + delay + "ms)");
+                    }
+                    double conformWidth = 0;
+                    for (Node nx : this.vmsa.getNames().getChildren()) {
+                        if (nx instanceof VBox) {
+                            for (Node ny : ((VBox) nx).getChildren()) {
+                                if (ny instanceof Label) {
+                                    conformWidth = Math.max(conformWidth, ((Label) ny).getWidth());
+                                    System.out.println(((Label) ny).getText() + " " + ((Label) ny).getLayoutBounds().getWidth());
+                                }
                             }
                         }
                     }
-                }
-                conformWidth += 30; //px
-                System.out.println("Initializing pane proportion; " + conformWidth + "/" + mainPane.getWidth());
-                mainPane.setDividerPosition(0, mainPane.getWidth() == 0.0d ? 0.3 : conformWidth / mainPane.getWidth());
-            });
-
+                    conformWidth += 30; //px
+                    if (mainPane.getWidth() != 0.0d && conformWidth != 30.0) {
+                        System.out.println("Initializing pane proportion; " + conformWidth + "/" + mainPane.getWidth());
+                        mainPane.setDividerPosition(0, conformWidth / mainPane.getWidth());
+                    }
+                    //mainPane.setDividerPosition(0, mainPane.getWidth() == 0.0d ? 0.3 : conformWidth / mainPane.getWidth());
+                });
+            }
         };
+
         try {
             (new Thread(splitterOp)).start();
         } catch (Exception ex) {
