@@ -191,7 +191,15 @@ public class ShadeyProjectManager {
 
                                     break;
                                 } else {
+                                    boolean isdot = false;
+                                    if (line.startsWith(".")) {
+                                        line = "*" + line.substring(1);
+                                        isdot = true;
+                                    }
                                     String[] data = line.split("\\.");
+                                    if (isdot) {
+                                        data[0] = ".";
+                                    }
                                     //System.out.println(Arrays.toString(data));
                                     VisualBioChar vbc = new VisualBioChar(data[0],
                                             isanno, isnumb, isseq, isgroup, iscons);
