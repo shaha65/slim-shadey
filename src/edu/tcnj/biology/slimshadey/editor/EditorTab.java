@@ -1155,9 +1155,9 @@ st.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("res
 
     private void writeFile(List<String> lines) {
         FileChooser fileChooserSave = new FileChooser();
-        fileChooserSave.setTitle("Save alignment in FASTA format");
+        fileChooserSave.setTitle("Save alignment in RTF format");
         FileChooser.ExtensionFilter extFilterSave = new FileChooser.ExtensionFilter("rich text format (*.rtf)", "*.rtf");
-        fileChooserSave.setInitialFileName(this.getText());
+        fileChooserSave.setInitialFileName(this.getText().concat(".rtf"));
         fileChooserSave.getExtensionFilters().add(extFilterSave);
         File fileSave = fileChooserSave.showSaveDialog(this.THE_PROGRAM.getStage());
         if (fileSave != null) {

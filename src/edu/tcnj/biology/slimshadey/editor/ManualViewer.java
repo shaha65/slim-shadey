@@ -42,7 +42,7 @@ public class ManualViewer {
 
     private String htmlContent;
 
-    private String MANUAL_NAME = "manual_v4.html";
+    private String MANUAL_NAME = "manualFINAL.html";
 
     public ManualViewer(EditorInterface parentApplication) {
         this.manualStage = new Stage();

@@ -20,6 +20,7 @@ import javafx.beans.Observable;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -37,6 +38,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
@@ -67,7 +69,7 @@ public class OutputPrinter {
 
     public void makeOutput() {
         Stage outputSettingsStage = new Stage();
-outputSettingsStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("resources/icons/icon3.png")));
+        outputSettingsStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("resources/icons/icon3.png")));
         outputSettingsStage.setTitle("Printout settings");
 
         VBox outputSettingsRoot = new VBox(5);
@@ -178,7 +180,7 @@ outputSettingsStage.getIcons().add(new Image(getClass().getClassLoader().getReso
         showConsensusBox.setSelected(true);
         showConsensusBoxContainer.getChildren().add(showConsensusBox);
         showConsensusBoxContainer.setPadding(new Insets(5));
-        
+
         Button execute = new Button("Generate print preview");
 
         //encode component behaviors
@@ -384,7 +386,7 @@ outputSettingsStage.getIcons().add(new Image(getClass().getClassLoader().getReso
 
     private void showOutputWindow() {
         Stage outStage = new Stage();
-outStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("resources/icons/icon3.png")));
+        outStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("resources/icons/icon3.png")));
         ScrollPane scrollRoot = new ScrollPane();
         VBox root = new VBox();
         VBox outputBox = makeOutput_printout();
@@ -422,6 +424,11 @@ outStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStrea
         Scene outScene = new Scene(root);
         outStage.setScene(outScene);
         outStage.show();
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        outStage.setHeight(screenBounds.getHeight() * 0.85);
+        outStage.setX((screenBounds.getWidth() - outStage.getWidth()) / 2);
+        outStage.setY((screenBounds.getHeight() - outStage.getHeight()) / 2);
+        
     }
 
     private VBox makeOutput_printout() {
