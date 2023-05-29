@@ -1,32 +1,23 @@
-========================
-BUILD OUTPUT DESCRIPTION
-========================
+Make sure you have Java 8 JRE installed; ensure you've uninstalled any prior 
+releases of Java.
 
-When you build an Java application project that has a main class, the IDE
-automatically copies all of the JAR
-files on the projects classpath to your projects dist/lib folder. The IDE
-also adds each of the JAR files to the Class-Path element in the application
-JAR files manifest file (MANIFEST.MF).
 
-To run the project from the command line, go to the dist folder and
-type the following:
+For ANY OPERATING SYSTEM
+
+SlimShadey can be run by double-clicking the SlimShadey.jar file.
+
+If SlimShadey does not open, please refer to the manual for troubleshooting.
+
+To run SlimShadey from the command line, navigate to the folder containing 
+the executable SlimShadey.jar and execute the following:
 
 java -jar "SlimShadey.jar" 
 
-To distribute this project, zip up the dist folder (including the lib folder)
-and distribute the ZIP file.
 
-Notes:
 
-* If two JAR files on the project classpath have the same name, only the first
-JAR file is copied to the lib folder.
-* Only JAR files are copied to the lib folder.
-If the classpath contains other types of files or folders, these files (folders)
-are not copied.
-* If a library on the projects classpath also has a Class-Path element
-specified in the manifest,the content of the Class-Path element has to be on
-the projects runtime path.
-* To set a main class in a standard Java project, right-click the project node
-in the Projects window and choose Properties. Then click Run and enter the
-class name in the Main Class field. Alternatively, you can manually type the
-class name in the manifest Main-Class element.
+For WINDOWS 10+
+
+Double click SlimShadey-1.0.exe to launch the Windows installer.
+
+This does not require you to install Java. SlimShadey will be treated as
+an installed application and be listed on the PATH.
